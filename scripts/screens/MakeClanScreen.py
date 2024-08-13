@@ -216,6 +216,12 @@ class MakeClanScreen(Screens):
         if event.ui_element == self.elements['previous_step']:
             self.open_game_mode()
 
+        elif event.ui_element == self.elements['random_clan_checkbox']:
+            if '#checked_checkbox' in self.elements['random_clan_checkbox'].object_ids:
+                self.elements['random_clan_checkbox'].change_object_id("#unchecked_checkbox")
+            else:
+                self.elements['random_clan_checkbox'].change_object_id("#checked_checkbox")
+
     def handle_game_mode_event(self, event):
         """Handle events for the game mode screen"""
         # Game mode selection buttons
@@ -1204,6 +1210,12 @@ class MakeClanScreen(Screens):
         self.clear_all_page()
         self.sub_screen = "custom config"
 
+        # Load Images
+
+        box_label = image_cache.load_image(
+            "resources/images/box_text_label.png"
+        ).convert_alpha()
+
         # Create the background for config options
 
         self.elements["custom_background"] = pygame_gui.elements.UIPanel(
@@ -1216,6 +1228,34 @@ class MakeClanScreen(Screens):
             object_id=get_text_box_theme("#text_box_30_horizcenter"),
             manager=MANAGER,
         )
+
+
+        self.elements['random_clan_checkbox'] = UIImageButton(
+            scale(pygame.Rect((1120, 1240), (68, 68))), "",
+            object_id="#unchecked_checkbox",
+            manager=MANAGER,
+            tool_tip_text= "When checked, a completely random Clan starting in  Newleaf will be generated."
+        )
+
+        self.elements['random_clan_checkbox_label'] = pygame_gui.elements.UILabel(
+          scale(pygame.Rect((1200, 1246), (-1, -1))), "Quick Start",
+          manager=MANAGER,
+          object_id=get_text_box_theme("#text_box_30_horizleft")
+        )
+
+        self.elements["box_label"] = pygame_gui.elements.UIImage(
+            scale(pygame.Rect((400,136),(360,66))),
+            pygame.transform.scale(box_label, (360,66)),
+            manager=MANAGER
+        )
+
+        self.elements["mode_name"] = pygame_gui.elements.UITextBox(
+            "Custom Mode Config",
+            scale(pygame.Rect((400, 140), (360, 200))),
+            object_id="#text_box_30_horizcenter_light",
+            manager=MANAGER,
+        )
+
 
         # Navigation Buttons
 
