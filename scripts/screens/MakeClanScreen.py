@@ -93,6 +93,14 @@ class MakeClanScreen(Screens):
         "-COMING SOON-"
     )
 
+    custom_mode_text = (
+        "Dont like any of the existing modes or just want to mix and match features this is the "
+        "mode for you<br><br>"
+        "Manually pick and choose all the features you want to use in your clan"
+        "<br><br>"
+        "-COMING SOON-"
+    )
+
     # This section holds all the information needed
     game_mode = "classic"  # To save the users selection before conformation.
     clan_name = ""  # To store the Clan name before conformation
@@ -211,6 +219,9 @@ class MakeClanScreen(Screens):
         elif event.ui_element == self.elements["cruel_mode_button"]:
             self.game_mode = "cruel season"
             self.refresh_text_and_buttons()
+        elif event.ui_element == self.elements["custom_mode_button"]:
+            self.game_mode = "custom"
+            self.refresh_text_and_buttons()
 
         # Logic for when to quick start clan
         elif event.ui_element == self.elements['next_step']:
@@ -235,12 +246,16 @@ class MakeClanScreen(Screens):
                 self.game_mode = "expanded"
             elif self.game_mode == "expanded":
                 self.game_mode = "cruel season"
+            elif self.game_mode == "cruel season":
+                self.game_mode = "custom"
             self.refresh_text_and_buttons()
         elif event.key == pygame.K_UP:
             if self.game_mode == "cruel season":
                 self.game_mode = "expanded"
             elif self.game_mode == "expanded":
                 self.game_mode = "classic"
+            elif self.game_mode == "custom":
+                self.game_mode = "cruel season"
             self.refresh_text_and_buttons()
 
         elif event.key == pygame.K_RIGHT or event.key == pygame.K_RETURN:
@@ -620,6 +635,9 @@ class MakeClanScreen(Screens):
             elif self.game_mode == "cruel season":
                 display_text = self.cruel_mode_text
                 display_name = "Cruel Season"
+            elif self.game_mode == "custom":
+                display_text = self.custom_mode_text
+                display_name = "Custom Mode"
             else:
                 display_text = ""
                 display_name = "ERROR"
@@ -633,21 +651,30 @@ class MakeClanScreen(Screens):
                 self.elements["classic_mode_button"].disable()
                 self.elements["expanded_mode_button"].enable()
                 self.elements["cruel_mode_button"].enable()
+                self.elements["custom_mode_button"].enable()
             elif self.game_mode == "expanded":
                 self.elements["classic_mode_button"].enable()
                 self.elements["expanded_mode_button"].disable()
                 self.elements["cruel_mode_button"].enable()
+                self.elements["custom_mode_button"].enable()
             elif self.game_mode == "cruel season":
                 self.elements["classic_mode_button"].enable()
                 self.elements["expanded_mode_button"].enable()
                 self.elements["cruel_mode_button"].disable()
+                self.elements["custom_mode_button"].enable()
+            elif self.game_mode == "custom":
+                self.elements["classic_mode_button"].enable()
+                self.elements["expanded_mode_button"].enable()
+                self.elements["cruel_mode_button"].enable()
+                self.elements["custom_mode_button"].disable()
             else:
                 self.elements["classic_mode_button"].enable()
                 self.elements["expanded_mode_button"].enable()
                 self.elements["cruel_mode_button"].enable()
+                self.elements["custom_mode_button"].enable()
 
             # Don't let the player go forwards with cruel mode, it's not done yet.
-            if self.game_mode == "cruel season":
+            if (self.game_mode == "cruel season") | (self.game_mode == "custom"):
                 self.elements["next_step"].disable()
             else:
                 self.elements["next_step"].enable()
@@ -848,9 +875,9 @@ class MakeClanScreen(Screens):
                 manager=MANAGER,
             )
             self.tabs["tab4"] = UIImageButton(
-              scale(pygame.Rect((215, 570), (308, 60))), 
-              "", 
-              object_id="#ruins_tab", 
+              scale(pygame.Rect((215, 570), (308, 60))),
+              "",
+              object_id="#ruins_tab",
               manager=MANAGER
             )
         elif self.biome_selected == "Plains":
@@ -1140,7 +1167,7 @@ class MakeClanScreen(Screens):
             if chosen_name.casefold() not in [clan.casefold() for clan in game.switches['clan_list']]:
                 return chosen_name
             print("Generated clan name was already in use! Rerolling...")
-    
+
     def random_biome_selection(self):
         # Select a random biome and background
         old_biome = self.biome_selected
@@ -1182,22 +1209,28 @@ class MakeClanScreen(Screens):
         # Create all the elements.
 
         self.elements["classic_mode_button"] = UIImageButton(
-            scale(pygame.Rect((218, 480), (264, 60))),
+            scale(pygame.Rect((218, 440), (264, 60))),
             "",
             object_id="#classic_mode_button",
             manager=MANAGER,
         )
         self.elements["expanded_mode_button"] = UIImageButton(
-            scale(pygame.Rect((188, 640), (324, 68))),
+            scale(pygame.Rect((188, 600), (324, 68))),
             "",
             object_id="#expanded_mode_button",
             manager=MANAGER,
         )
         self.elements["cruel_mode_button"] = UIImageButton(
-            scale(pygame.Rect((200, 800), (300, 60))),
+            scale(pygame.Rect((200, 760), (300, 60))),
             "",
             object_id="#cruel_mode_button",
             manager=MANAGER,
+        )
+        self.elements["custom_mode_button"] = UIImageButton(
+            scale(pygame.Rect((218, 920), (264, 60))),
+            "",
+            object_id="#custom_mode_button",
+            manager=MANAGER
         )
         self.elements["previous_step"] = UIImageButton(
             scale(pygame.Rect((506, 1240), (294, 60))),
