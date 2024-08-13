@@ -43,7 +43,7 @@ if not getattr(sys, "frozen", False):
     if isMissing:
         print(
             """You are missing some requirements to run clangen!
-                
+
                 Please look at the "README.md" file for instructions on how to install them.
                 """
         )
@@ -358,7 +358,7 @@ while True:
         if event.type == pygame.MOUSEBUTTONDOWN:
             game.clicked = True
 
-            if MANAGER.visual_debug_active:
+            if True:
                 _ = pygame.mouse.get_pos()
                 if game.settings["fullscreen"]:
                     print(f"(x: {_[0]}, y: {_[1]})")

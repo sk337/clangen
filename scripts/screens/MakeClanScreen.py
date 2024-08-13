@@ -194,6 +194,8 @@ class MakeClanScreen(Screens):
                 self.handle_choose_symbol_event(event)
             elif self.sub_screen == "saved screen":
                 self.handle_saved_clan_event(event)
+            elif self.sub_screen == "custom config":
+                self.handle_custom_mode_event(event)
 
         elif event.type == pygame.KEYDOWN and game.settings["keybinds"]:
             if self.sub_screen == "game mode":
@@ -206,6 +208,13 @@ class MakeClanScreen(Screens):
                 event.key == pygame.K_RETURN or event.key == pygame.K_RIGHT
             ):
                 self.change_screen("start screen")
+
+    def handle_custom_mode_event(self, event):
+        """Handle events for the custom game mode screen"""
+
+        # Handle navigation button presses
+        if event.ui_element == self.elements['previous_step']:
+            self.open_game_mode()
 
     def handle_game_mode_event(self, event):
         """Handle events for the game mode screen"""
@@ -226,12 +235,15 @@ class MakeClanScreen(Screens):
         # Logic for when to quick start clan
         elif event.ui_element == self.elements['next_step']:
             game.settings['game_mode'] = self.game_mode
-            if '#checked_checkbox' in self.elements['random_clan_checkbox'].object_ids:
-                self.random_quick_start()
-                self.save_clan()
-                self.open_clan_saved_screen()
+            if self.game_mode == "custom":
+                self.open_custom_gamemode_selection()
             else:
-                self.open_name_clan()
+                if '#checked_checkbox' in self.elements['random_clan_checkbox'].object_ids:
+                    self.random_quick_start()
+                    self.save_clan()
+                    self.open_clan_saved_screen()
+                else:
+                    self.open_name_clan()
         elif event.ui_element == self.elements['random_clan_checkbox']:
             if '#checked_checkbox' in self.elements['random_clan_checkbox'].object_ids:
                 self.elements['random_clan_checkbox'].change_object_id("#unchecked_checkbox")
@@ -674,7 +686,7 @@ class MakeClanScreen(Screens):
                 self.elements["custom_mode_button"].enable()
 
             # Don't let the player go forwards with cruel mode, it's not done yet.
-            if (self.game_mode == "cruel season") | (self.game_mode == "custom"):
+            if (self.game_mode == "cruel season"):
                 self.elements["next_step"].disable()
             else:
                 self.elements["next_step"].enable()
@@ -1184,6 +1196,43 @@ class MakeClanScreen(Screens):
         return (
             f"<b>{cat.name}</b><br>{cat.gender}<br>{cat.age}<br>{cat.personality.trait}"
         )
+
+
+    def open_custom_gamemode_selection(self):
+        """Opens the configuration screen for making a custom gamemode"""
+        # Clear previous screen
+        self.clear_all_page()
+        self.sub_screen = "custom config"
+
+        # Create the background for config options
+
+        self.elements["custom_background"] = pygame_gui.elements.UIPanel(
+            scale(pygame.Rect((200,200), (1200,900)))
+        )
+
+        self.elements["permi_warning"] = pygame_gui.elements.UITextBox(
+            "Your Clan's game mode is permanent and cannot be changed after Clan creation.",
+            scale(pygame.Rect((200, 1162), (1200, 80))),
+            object_id=get_text_box_theme("#text_box_30_horizcenter"),
+            manager=MANAGER,
+        )
+
+        # Navigation Buttons
+
+        self.elements["previous_step"] = UIImageButton(
+            scale(pygame.Rect((506, 1240), (294, 60))),
+            "",
+            object_id="#previous_step_button",
+            manager=MANAGER,
+        )
+        self.elements["next_step"] = UIImageButton(
+            scale(pygame.Rect((800, 1240), (294, 60))),
+            "",
+            object_id="#next_step_button",
+            manager=MANAGER,
+        )
+        self.elements["next_step"].disable()
+
 
     def open_game_mode(self):
         # Clear previous screen
