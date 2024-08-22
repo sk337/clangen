@@ -358,7 +358,7 @@ while True:
         if event.type == pygame.MOUSEBUTTONDOWN:
             game.clicked = True
 
-            if True:
+            if MANAGER.visual_debug_active:
                 _ = pygame.mouse.get_pos()
                 if game.settings["fullscreen"]:
                     print(f"(x: {_[0]}, y: {_[1]})")

@@ -692,7 +692,8 @@ class MakeClanScreen(Screens):
                 self.elements["custom_mode_button"].enable()
 
             # Don't let the player go forwards with cruel mode, it's not done yet.
-            if (self.game_mode == "cruel season"):
+            # if self.game_mode == "cruel season" :
+            if (self.game_mode == "cruel season") | (self.game_mode == "custom"):
                 self.elements["next_step"].disable()
             else:
                 self.elements["next_step"].enable()
@@ -1251,7 +1252,7 @@ class MakeClanScreen(Screens):
 
         self.elements["mode_name"] = pygame_gui.elements.UITextBox(
             "Custom Mode Config",
-            scale(pygame.Rect((400, 140), (360, 200))),
+            scale(pygame.Rect((400, 140), (360  , 200))),
             object_id="#text_box_30_horizcenter_light",
             manager=MANAGER,
         )
@@ -1317,10 +1318,11 @@ class MakeClanScreen(Screens):
         )
         self.elements["custom_mode_button"] = UIImageButton(
             scale(pygame.Rect((218, 920), (264, 60))),
-            "",
+            "Custom Mode",
             object_id="#custom_mode_button",
             manager=MANAGER
         )
+
         self.elements["previous_step"] = UIImageButton(
             scale(pygame.Rect((506, 1240), (294, 60))),
             "",
